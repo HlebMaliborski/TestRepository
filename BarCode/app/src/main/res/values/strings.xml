@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BarCode</string>
+    <string-array name="planets_array">
+        <item>15</item>
+        <item>20</item>
+        <item>25</item>
+        <item>30</item>
+    </string-array>
+
+    <string-array name="resolution">
+        <item>1920/2560</item>
+        <item>1080/1920</item>
+        <item>1200/1600</item>
+        <item>720/1280</item>
+        <item>768/1024</item>
+        <item>480/720</item>
+        <item>480/640</item>
+        <item>240/320</item>
+    </string-array>
+
+    <string-array name="cameras">
+        <item>Back</item>
+        <item>Front</item>
+    </string-array>
+    <string name="link">&lt;a href="http://www.google.com">Google&lt;/a></string>
+    <string name="error_merchant_agreement">The activation of the Carbon device cannot be completed. Please visit &lt;a href=\"https://dev.estatemanager.verifonecp.com/login\">%1$s&lt;/a>,
+        log in with your User ID and password and accept Verifone\'s Terms of Service for the Verifone Products to complete your account registration.</string>
+<string name="mlink">  to go to Google<![CDATA[ <a href="http://google.com">click here</a>]]> and <![CDATA[<a href="http://yahoo.com">this</a>]]> moves you to yahoo! </string>
+    <string name="urltext"><a href="https://www.google.com/">Google</a></string>
+</resources>
