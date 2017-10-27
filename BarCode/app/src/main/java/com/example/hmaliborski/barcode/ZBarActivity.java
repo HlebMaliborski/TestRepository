@@ -86,8 +86,8 @@ public class ZBarActivity extends AppCompatActivity {
         List<Camera.Size> sizes = parameters.getSupportedPictureSizes();
         Camera.Size size = sizes.get(resolution);
         parameters.setPictureSize(size.width, size.height);
-        if (isFocusOn) {
-            parameters.setFocusMode(mCamera.getParameters().getFocusMode());
+        if (isFocusOn && !mCamera.getParameters().getFocusMode().equals("fixed")) {
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         } else {
             mCamera.cancelAutoFocus();
         }
@@ -99,7 +99,6 @@ public class ZBarActivity extends AppCompatActivity {
         releaseCamera();
     }
 
-    private long startAutoFocus;
     private double secondsOpening;
 
     private Camera openFrontFacingCameraGingerbread() {
@@ -115,7 +114,6 @@ public class ZBarActivity extends AppCompatActivity {
                 try {
                     long startTime = System.nanoTime();
                     cam = Camera.open(camIdx);
-                    startAutoFocus = System.nanoTime();
                     long endTime = System.nanoTime();
                     long a = endTime - startTime;
                     secondsOpening = (double) a / 1000000.0;
@@ -167,6 +165,7 @@ public class ZBarActivity extends AppCompatActivity {
                 long endTime = System.nanoTime();
                 long a = endTime - startTime;
                 double seconds = (double) a / 1000000.0;
+                //seconds = Math.round(seconds);
                 seconds = Math.floor(seconds * 100) / 100;
                 previewing = false;
                 mCamera.setPreviewCallback(null);
@@ -186,34 +185,28 @@ public class ZBarActivity extends AppCompatActivity {
     };
 
 
-    double focusTime = 0;
-    private boolean isAutofocus;
     // Mimic continuous auto-focusing
     Camera.AutoFocusCallback autoFocusCB = new Camera.AutoFocusCallback() {
         public void onAutoFocus(boolean success, Camera camera) {
-            if (focusTime == 0) {
-                long stopAutofocus = System.nanoTime();
-                long a = stopAutofocus - startAutoFocus;
-                focusTime = (double) a / 1000000.0;
-            }
             mAutoFocusHandler.postDelayed(doAutoFocus, 1000);
         }
     };
 
     private void showAlertDialog(String message, double seconds, String codeType) {
+        //secondsOpening = Math.round(secondsOpening);
         secondsOpening = Math.floor(secondsOpening * 100) / 100;
-        focusTime = Math.floor(focusTime * 100) / 100;
         doubleTimeAfterSuccess = Math.floor(doubleTimeAfterSuccess * 100) / 100;
+        //doubleTimeAfterSuccess = Math.round(doubleTimeAfterSuccess);
 
         new AlertDialog.Builder(this)
                 .setTitle(getResources().getString(R.string.app_name))
                 .setCancelable(false)
-                .setMessage("Code: " + message + System.lineSeparator() + "Spent time in milliseconds for recognizing barcode: " + seconds +
+                .setMessage("Code: " + message +
+                        System.lineSeparator() + "Processing time: " + seconds + "ms" +
                         System.lineSeparator() + "Code type: " + codeType +
-                        System.lineSeparator() + "Time for opening camera in ms: " + secondsOpening +
-                        System.lineSeparator() + "Focus time after opening camera in ms: " + focusTime +
-                        System.lineSeparator() + "Count of images before success : " + countOfImagesBeforeSuccess +
-                        System.lineSeparator() + "Time before we capture success image : " + doubleTimeAfterSuccess)
+                        System.lineSeparator() + "Time for opening camera: " + secondsOpening + "ms" +
+                        System.lineSeparator() + "Dropped images: " + countOfImagesBeforeSuccess +
+                        System.lineSeparator() + "Time elapsed before successful scan : " + doubleTimeAfterSuccess + "ms")
 
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {

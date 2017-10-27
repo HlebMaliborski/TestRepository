@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initializeSpinners();
+/*        initializeSpinners();
         initializeToggle();
 
         Button zBarButton = (Button) findViewById(R.id.zbar);
@@ -48,8 +48,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         scanditButton.setOnClickListener(this);
         zBarButton.setOnClickListener(this);
         //zXingButton.setOnClickListener(this);
-        zXingCustomButton.setOnClickListener(this);
+        zXingCustomButton.setOnClickListener(this);*/
         //zXingCamera2Button.setOnClickListener(this);
+        Intent intent = new Intent("com.verifone.swordfish.zbar.scan");
+        startActivity(intent);
     }
 
     private void initializeToggle() {

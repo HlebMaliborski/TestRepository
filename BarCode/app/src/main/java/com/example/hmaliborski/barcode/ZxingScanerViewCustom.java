@@ -117,8 +117,8 @@ public class ZxingScanerViewCustom extends BarcodeScannerView {
 
                 long endTime = System.nanoTime();
                 long a = endTime - startTime;
+                //final double seconds = Math.round((double) a / 1000000.0);
                 final double seconds = Math.floor(((double) a / 1000000.0) * 100) / 100;
-
                 if (var22 != null) {
                     long endTimeBefore = System.nanoTime() - startTimeBefore;
                     doubleTimeBefore = (double) endTimeBefore / 1000000.0;

@@ -5,10 +5,10 @@ import android.hardware.Camera;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.FrameLayout;
 
 import com.google.zxing.Result;
 
-import me.dm7.barcodescanner.core.CameraWrapper;
 
 public class ZXingActivity extends AppCompatActivity implements ZxingScanerViewCustom.ResultHandler {
     private ZxingScanerViewCustom mScannerView;
@@ -17,16 +17,12 @@ public class ZXingActivity extends AppCompatActivity implements ZxingScanerViewC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         zXingActivity = this;
         mScannerView = new ZxingScanerViewCustom(this);
-/*        Camera camera = Camera.open(1);
-        CameraWrapper wrapper = CameraWrapper.getWrapper(camera, 1);
-        wrapper.mCamera.cancelAutoFocus();
-        mScannerView.setupCameraPreview(wrapper);*/
-        setContentView(mScannerView);
+        setContentView(R.layout.activity_zxing);
+        FrameLayout preview = (FrameLayout) findViewById(R.id.zxingPreview);
+        preview.addView(mScannerView);
     }
-
 
     double secondsOpening = 0;
 
@@ -44,14 +40,14 @@ public class ZXingActivity extends AppCompatActivity implements ZxingScanerViewC
             long a = endTime - startTime;
             secondsOpening = (double) a / 1000000.0;
             secondsOpening = Math.floor(secondsOpening * 100) / 100;
+            //secondsOpening = Math.round(secondsOpening);
         }
     }
 
     private int getCameraId() {
-        int cameraCount = 0;
+        int cameraCount;
         int camera = getIntent().getIntExtra("camera", 1);
 
-        Camera cam = null;
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
         cameraCount = Camera.getNumberOfCameras();
         for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
@@ -73,26 +69,35 @@ public class ZXingActivity extends AppCompatActivity implements ZxingScanerViewC
         mScannerView.stopCamera();
     }
 
+    boolean a = false;
+
     @Override
     public void handleResult(Result var1, String barCode, double seconds, long countOfImages, double timeBefore) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Scan Result");
-        builder.setMessage("Code: " + var1.getText() +
-                System.lineSeparator() + "Spent time in milliseconds for recognizing barcode: " + seconds +
-                System.lineSeparator() + "Code type: " + barCode +
-                System.lineSeparator() + "Time for opening camera in ms: " + secondsOpening +
-                System.lineSeparator() + "Count of images before success : " + countOfImages +
-                System.lineSeparator() + "Time before we capture success image : " + timeBefore);
+        if (!a) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Scan Result");
+            builder.setMessage("Code: " + var1.getText() +
+                    System.lineSeparator() + "Processing time: " +  seconds + "ms" +
+                    System.lineSeparator() + "Code type: " + barCode +
+                    System.lineSeparator() + "Time for opening camera: " +  secondsOpening + "ms" +
+                    System.lineSeparator() + "Dropped images: " + countOfImages +
+                    System.lineSeparator() + "Time elapsed before successful scan : " + timeBefore + "ms");
 
-
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                mScannerView.resumeCameraPreview(zXingActivity);
-            }
-        });
-        builder.setCancelable(false);
-        AlertDialog alert1 = builder.create();
-        alert1.show();
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    a = false;
+                /*mScannerView.setResultHandler(zXingActivity);
+                int cameraId = getCameraId();
+                mScannerView.startCamera(cameraId);*/
+                }
+            });
+            builder.setCancelable(false);
+            AlertDialog alert1 = builder.create();
+            alert1.show();
+            a = true;
+        }
+        //mScannerView.stopCamera();
+        mScannerView.resumeCameraPreview(this);
     }
 }
