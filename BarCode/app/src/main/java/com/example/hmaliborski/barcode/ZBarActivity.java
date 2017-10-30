@@ -3,6 +3,7 @@ package com.example.hmaliborski.barcode;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -89,7 +90,10 @@ public class ZBarActivity extends AppCompatActivity {
         if (isFocusOn && !mCamera.getParameters().getFocusMode().equals("fixed")) {
             parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         } else {
-            mCamera.cancelAutoFocus();
+            PackageManager pm = getPackageManager();
+            if(pm.hasSystemFeature(PackageManager.FEATURE_CAMERA) && pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS)){
+                mCamera.cancelAutoFocus();
+            }
         }
         mCamera.setParameters(parameters);
     }

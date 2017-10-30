@@ -1,9 +1,14 @@
 package com.example.hmaliborski.barcode;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.hardware.Camera;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,28 +35,68 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int fps = 15;
     private int resolution = 0;
     private int camera = 0, zBarCamera = 0, zXingCamera = 0;
-
+    private Button zBarButton, zXingCustomButton, scanditButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-/*        initializeSpinners();
+        initializeSpinners();
         initializeToggle();
-
-        Button zBarButton = (Button) findViewById(R.id.zbar);
+        
+        zBarButton = (Button) findViewById(R.id.zbar);
         //Button zXingButton = (Button) findViewById(R.id.zxing);
-        Button zXingCustomButton = (Button) findViewById(R.id.zxing2);
+        zXingCustomButton = (Button) findViewById(R.id.zxing2);
         //Button zXingCamera2Button = (Button) findViewById(R.id.zxingCam);
-        Button scanditButton = (Button) findViewById(R.id.scanditBarCode);
+        scanditButton = (Button) findViewById(R.id.scanditBarCode);
         mQrScan = new IntentIntegrator(this);
         scanditButton.setOnClickListener(this);
         zBarButton.setOnClickListener(this);
         //zXingButton.setOnClickListener(this);
-        zXingCustomButton.setOnClickListener(this);*/
+        zXingCustomButton.setOnClickListener(this);
         //zXingCamera2Button.setOnClickListener(this);
-        Intent intent = new Intent("com.verifone.swordfish.zbar.scan");
-        startActivity(intent);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.CAMERA)) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.CAMERA},
+                        1);
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.CAMERA},
+                        1);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                } else {
+                    Toast.makeText(this, "Functionality will be disabled", Toast.LENGTH_LONG).show();
+                    zBarButton.setEnabled(false);
+                    zXingCustomButton.setEnabled(false);
+                    scanditButton.setEnabled(false);
+                }
+            }
+        }
+
     }
 
     private void initializeToggle() {

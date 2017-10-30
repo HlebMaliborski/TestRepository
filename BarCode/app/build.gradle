@@ -22,7 +22,7 @@ android {
 
 repositories {
     flatDir {
-        dirs 'C:\\Users\\hmaliborski\\Desktop\\scandit-barcodescanner-test-android_5.4.2\\scandit-barcodescanner-test-android_5.4.2\\ScanditSDK'
+        dirs 'C:\\Users\\hmaliborski\\Desktop\\scandit-barcodescanner-test-android_5.4.2\\ScanditSDK'
     }
 }
 
@@ -40,3 +40,4 @@ dependencies {
     compile 'me.dm7.barcodescanner:zxing:1.9'
     testCompile 'junit:junit:4.12'
 }
+

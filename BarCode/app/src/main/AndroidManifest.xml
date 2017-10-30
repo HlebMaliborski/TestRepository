@@ -20,17 +20,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ZBarActivity" />
-        <activity android:name=".ZXingActivity" />
+        <activity android:name=".ZBarActivity" android:screenOrientation="landscape"/>
+        <activity android:name=".ZXingActivity" android:screenOrientation="landscape" />
         <activity android:name=".ZbarCamera2Activity" />
-        <activity android:name=".ScanditActivity" />
+        <activity android:name=".ScanditActivity" android:screenOrientation="landscape"/>
     </application>
 
 </manifest>

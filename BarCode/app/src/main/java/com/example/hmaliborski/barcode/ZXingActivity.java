@@ -1,6 +1,7 @@
 package com.example.hmaliborski.barcode;
 
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -34,7 +35,10 @@ public class ZXingActivity extends AppCompatActivity implements ZxingScanerViewC
         long startTime = System.nanoTime();
         mScannerView.startCamera(cameraId);
         boolean isFocusable = getIntent().getBooleanExtra("focus", true);
-        mScannerView.setFocus(isFocusable);
+        PackageManager pm = getPackageManager();
+        if(pm.hasSystemFeature(PackageManager.FEATURE_CAMERA) && pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS)){
+            mScannerView.setFocus(isFocusable);
+        }
         if (secondsOpening == 0) {
             long endTime = System.nanoTime();
             long a = endTime - startTime;
